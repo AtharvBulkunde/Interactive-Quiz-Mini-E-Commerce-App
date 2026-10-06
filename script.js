@@ -1,5 +1,5 @@
 (function () {
-  // ---------- PRODUCT DATA (with image URLs) ----------
+  // ---------- PRODUCT DATA ----------
   const products = [
     {
       id: 'p1',
@@ -48,7 +48,7 @@
   // ---------- CART STATE ----------
   let cart = [];
 
-  // DOM refs
+  // ---------- DOM refs ----------
   const productGrid = document.getElementById('productGrid');
   const cartCountDisplay = document.getElementById('cartCountDisplay');
   const cartTotalDisplay = document.getElementById('cartTotalDisplay');
@@ -141,97 +141,4 @@
 
     cartItemsList.innerHTML = cart
       .map((item) => {
-        const product = getProductById(item.productId);
-        if (!product) return '';
-        const subtotal = product.price * item.quantity;
-        return `
-          <li class="cart-item">
-            <div class="cart-item-info">
-              <img
-                class="cart-item-image"
-                src="${product.image}"
-                alt="${product.name}"
-                onerror="this.src='https://placehold.co/96x96/1a1f3a/b794f6?text=?'"
-              />
-              <div class="cart-item-details">
-                <span class="cart-item-name">${product.name}</span>
-                <span class="cart-item-price">$${product.price.toFixed(2)} each</span>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;">
-              <span class="cart-item-qty">×${item.quantity}</span>
-              <span class="cart-item-subtotal">$${subtotal.toFixed(2)}</span>
-            </div>
-          </li>
-        `;
-      })
-      .join('');
-
-    placeOrderBtn.disabled = false;
-  }
-
-  // ---------- MODAL CONTROL ----------
-  function openModal() {
-    renderCartModal();
-    modalOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    modalOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  // ---------- TOAST ----------
-  let toastTimer;
-  function showToast(message) {
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-  }
-
-  // ---------- EVENTS ----------
-  function setupEventListeners() {
-    productGrid.addEventListener('click', (e) => {
-      const addBtn = e.target.closest('[data-add-id]');
-      if (!addBtn) return;
-      addToCart(addBtn.getAttribute('data-add-id'));
-    });
-
-    openCheckoutBtn.addEventListener('click', () => {
-      if (getTotalItemCount() === 0) return;
-      openModal();
-    });
-
-    closeModalBtn.addEventListener('click', closeModal);
-    continueShoppingBtn.addEventListener('click', closeModal);
-
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) closeModal();
-    });
-
-    placeOrderBtn.addEventListener('click', () => {
-      cart = [];
-      updateCartSummary();
-      renderCartModal();
-      closeModal();
-      showToast('✦ order placed — thank you!');
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-        closeModal();
-      }
-    });
-  }
-
-  // ---------- INIT ----------
-  function init() {
-    renderProducts();
-    updateCartSummary();
-    setupEventListeners();
-  }
-
-  init();
-})();
+        const product = get
