@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUXE · mini shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ambient background orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- header -->
+    <header class="top-bar glass">
+      <h1>
+        <span class="logo-mark">◆</span>
+        LUXE
+        <span class="tagline">curated goods</span>
+      </h1>
+
+      <div class="cart-summary">
+        <div class="cart-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span id="cartCountDisplay" class="cart-count">0</span>
+        </div>
+        <div class="cart-total" id="cartTotalDisplay">$0.00</div>
+        <button class="btn-checkout" id="openCheckoutBtn" disabled>
+          Checkout
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- section title -->
+    <div class="section-head">
+      <h2>The Collection</h2>
+      <p>Hand-picked pieces for everyday rituals.</p>
+    </div>
+
+    <!-- product grid -->
+    <div class="product-grid" id="productGrid"></div>
+
+    <footer class="footer">
+      <p>© 2025 LUXE — a beginner capstone demo</p>
+    </footer>
+  </div>
+
+  <!-- modal overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal glass" role="dialog" aria-modal="true" aria-label="Checkout preview">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow">Review</span>
+          <h2>Your Cart</h2>
+        </div>
+        <button class="btn-close" id="closeModalBtn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <ul class="cart-items-list" id="cartItemsList"></ul>
+      <div class="modal-total">
+        <span>Total</span>
+        <span id="modalTotalAmount">$0.00</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="continueShoppingBtn">Keep shopping</button>
+        <button class="btn-primary" id="placeOrderBtn" disabled>Place order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div class="toast-message" id="toast">added to cart</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
