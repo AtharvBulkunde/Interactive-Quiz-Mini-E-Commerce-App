@@ -1,256 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LUMINA — Aesthetic Mini E-Commerce App">
+  <title>LUMINA — Mini Store</title>
 
-  <title>LUXE · Mini Shop</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- Background Orbs -->
-  <div class="bg-orbs">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
+  <div class="background-orb orb-one"></div>
+  <div class="background-orb orb-two"></div>
+  <div class="background-orb orb-three"></div>
 
-  <!-- Main Wrapper -->
-  <div class="app-wrapper">
+  <!-- HEADER -->
+  <header class="site-header">
 
-    <!-- Header -->
-    <header class="top-bar glass">
+    <a href="#" class="brand">
+      <span class="brand-mark">L</span>
 
-      <h1>
-        <span class="logo-mark">◆</span>
-        LUXE
-        <span class="tagline">curated goods</span>
-      </h1>
+      <span>
+        <strong>LUMINA</strong>
+        <small>CURATED GOODS</small>
+      </span>
+    </a>
 
-      <!-- Cart Summary -->
-      <div class="cart-summary">
+    <nav class="desktop-nav">
+      <a href="#shop">Shop</a>
+      <a href="#story">Our Story</a>
+      <a href="#features">Why Us</a>
+    </nav>
 
-        <div class="cart-icon">
+    <button class="cart-button" id="cartButton">
+      <span class="cart-icon">🛒</span>
+      <span>Bag</span>
+      <b id="cartCount">0</b>
+    </button>
 
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+  </header>
+
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div class="hero-copy">
+
+        <span class="eyebrow">NEW SEASON · 2026</span>
+
+        <h1>
+          Beautiful things,
+          <br>
+          <em>beautifully chosen.</em>
+        </h1>
+
+        <p>
+          Discover a small collection of thoughtful everyday essentials.
+          Designed for people who appreciate simplicity, quality, and good details.
+        </p>
+
+        <a class="primary-button" href="#shop">
+          Explore collection
+          <span>↗</span>
+        </a>
+
+      </div>
+
+
+      <div class="hero-card">
+
+        <div class="hero-card-top">
+          <span>EDITOR'S PICK</span>
+          <span>01 / 04</span>
+        </div>
+
+        <div class="hero-product-image">
+          <img
+            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=85"
+            alt="Coffee"
           >
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
+        </div>
 
-          <span
-            id="cartCountDisplay"
-            class="cart-count"
-          >
-            0
-          </span>
+        <div class="hero-card-bottom">
+
+          <div>
+            <small>FEATURED</small>
+            <h3>Morning Ritual</h3>
+          </div>
+
+          <span class="price">$48</span>
 
         </div>
 
-        <div
-          class="cart-total"
-          id="cartTotalDisplay"
-        >
-          $0.00
-        </div>
+      </div>
 
-        <button
-          class="btn-checkout"
-          id="openCheckoutBtn"
-          disabled
-        >
-          Checkout
+    </section>
 
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
 
+    <!-- SHOP HEADER -->
+    <section class="section-heading" id="shop">
+
+      <div>
+        <span class="eyebrow">THE COLLECTION</span>
+        <h2>Find your next favorite.</h2>
+      </div>
+
+      <div class="filters" id="filters">
+
+        <button class="filter active" data-category="All">
+          All
+        </button>
+
+        <button class="filter" data-category="Lifestyle">
+          Lifestyle
+        </button>
+
+        <button class="filter" data-category="Tech">
+          Tech
+        </button>
+
+        <button class="filter" data-category="Home">
+          Home
         </button>
 
       </div>
 
-    </header>
+    </section>
 
 
-    <!-- Section Heading -->
-    <div class="section-head">
-
-      <h2>The Collection</h2>
-
-      <p>
-        Hand-picked pieces for everyday rituals.
-      </p>
-
-    </div>
-
-
-    <!-- Products -->
-    <div
+    <!-- PRODUCTS -->
+    <section
       class="product-grid"
       id="productGrid"
-    ></div>
+      aria-live="polite">
+    </section>
 
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- STORY -->
+    <section class="story-section" id="story">
 
-      <p>
-        © 2026 LUXE — a beginner capstone demo
-      </p>
+      <div class="story-image">
 
-    </footer>
+        <img
+          src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=85"
+          alt="Minimal coffee shop"
+        >
 
-  </div>
+      </div>
 
 
-  <!-- Checkout Modal -->
-  <div
-    class="modal-overlay"
-    id="modalOverlay"
-  >
+      <div class="story-copy">
 
-    <div
-      class="modal glass"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Checkout preview"
-    >
+        <span class="eyebrow">OUR PHILOSOPHY</span>
 
-      <!-- Modal Header -->
-      <div class="modal-header">
+        <h2>
+          Less noise.
+          <br>
+          <em>More meaning.</em>
+        </h2>
 
-        <div>
+        <p>
+          LUMINA is a fictional mini-store created as a front-end
+          portfolio project. Every interaction is intentionally simple,
+          tactile, and delightful.
+        </p>
 
-          <span class="modal-eyebrow">
-            Review
-          </span>
+        <div class="stats">
 
-          <h2>
-            Your Cart
-          </h2>
+          <div>
+            <strong>24h</strong>
+            <span>Fast dispatch</span>
+          </div>
+
+          <div>
+            <strong>4.9/5</strong>
+            <span>Happy customers</span>
+          </div>
+
+          <div>
+            <strong>30d</strong>
+            <span>Easy returns</span>
+          </div>
 
         </div>
 
-        <button
-          class="btn-close"
-          id="closeModalBtn"
-          aria-label="Close modal"
-        >
+      </div>
 
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          >
+    </section>
 
-            <line
-              x1="18"
-              y1="6"
-              x2="6"
-              y2="18"
-            ></line>
 
-            <line
-              x1="6"
-              y1="6"
-              x2="18"
-              y2="18"
-            ></line>
+    <!-- FEATURES -->
+    <section class="features" id="features">
 
-          </svg>
+      <article>
+        <span>✦</span>
+        <h3>Curated</h3>
+        <p>
+          Small collections instead of endless scrolling.
+        </p>
+      </article>
 
-        </button>
+      <article>
+        <span>◇</span>
+        <h3>Thoughtful</h3>
+        <p>
+          Products selected around real everyday rituals.
+        </p>
+      </article>
+
+      <article>
+        <span>♡</span>
+        <h3>Simple</h3>
+        <p>
+          A clean checkout with no unnecessary steps.
+        </p>
+      </article>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <span>© 2026 LUMINA</span>
+
+    <span>
+      Built as a front-end portfolio project.
+    </span>
+
+  </footer>
+
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay"></div>
+
+
+  <!-- CART DRAWER -->
+  <aside
+    class="cart-drawer"
+    id="cartDrawer"
+    aria-label="Shopping cart">
+
+    <div class="drawer-header">
+
+      <div>
+
+        <span class="eyebrow">
+          YOUR BAG
+        </span>
+
+        <h2>
+          Your selection
+        </h2>
 
       </div>
 
+      <button
+        class="icon-button"
+        id="closeCart">
+        ×
+      </button>
 
-      <!-- Cart Items -->
-      <ul
-        class="cart-items-list"
-        id="cartItemsList"
-      ></ul>
+    </div>
 
 
-      <!-- Total -->
-      <div class="modal-total">
+    <div
+      class="cart-items"
+      id="cartItems">
+    </div>
+
+
+    <!-- EMPTY CART -->
+    <div
+      class="empty-cart"
+      id="emptyCart">
+
+      <div>✦</div>
+
+      <h3>
+        Your bag is waiting.
+      </h3>
+
+      <p>
+        Add something you love and it will appear here.
+      </p>
+
+      <button
+        class="secondary-button"
+        id="continueShopping">
+
+        Continue shopping
+
+      </button>
+
+    </div>
+
+
+    <!-- CART SUMMARY -->
+    <div
+      class="cart-summary"
+      id="cartSummary">
+
+      <div>
+        <span>Subtotal</span>
+        <strong id="subtotal">$0.00</strong>
+      </div>
+
+      <div>
+        <span>Shipping</span>
+        <strong id="shipping">$0.00</strong>
+      </div>
+
+      <div class="total">
+        <span>Total</span>
+        <strong id="total">$0.00</strong>
+      </div>
+
+      <button
+        class="checkout-button"
+        id="checkoutButton">
+
+        Review checkout
+        <span>→</span>
+
+      </button>
+
+      <small>
+        Taxes calculated at checkout.
+      </small>
+
+    </div>
+
+  </aside>
+
+
+  <!-- CHECKOUT MODAL -->
+  <div
+    class="checkout-modal"
+    id="checkoutModal"
+    role="dialog"
+    aria-modal="true">
+
+    <div class="modal-card">
+
+      <button
+        class="modal-close"
+        id="closeModal">
+        ×
+      </button>
+
+      <span class="eyebrow">
+        CHECKOUT PREVIEW
+      </span>
+
+      <h2>
+        Almost yours.
+      </h2>
+
+      <p class="modal-intro">
+        Review your order before placing it.
+      </p>
+
+
+      <div
+        class="checkout-list"
+        id="checkoutList">
+      </div>
+
+
+      <div class="checkout-total">
 
         <span>
-          Total
+          Order total
         </span>
 
-        <span id="modalTotalAmount">
+        <strong id="checkoutTotal">
           $0.00
-        </span>
+        </strong>
 
       </div>
 
 
-      <!-- Actions -->
-      <div class="modal-actions">
+      <button
+        class="place-order"
+        id="placeOrder">
 
-        <button
-          class="btn-secondary"
-          id="continueShoppingBtn"
-        >
-          Keep shopping
-        </button>
+        Place demo order
+        <span>↗</span>
 
-        <button
-          class="btn-primary"
-          id="placeOrderBtn"
-          disabled
-        >
-          Place order
-        </button>
+      </button>
 
-      </div>
+      <p class="demo-note">
+        This is a front-end demo.
+        No payment will be processed.
+      </p>
 
     </div>
 
   </div>
 
 
-  <!-- Toast -->
+  <!-- TOAST -->
   <div
-    class="toast-message"
-    id="toast"
-  >
-    added to cart
+    class="toast"
+    id="toast">
   </div>
 
 
-  <!-- JavaScript -->
   <script src="script.js"></script>
 
 </body>
