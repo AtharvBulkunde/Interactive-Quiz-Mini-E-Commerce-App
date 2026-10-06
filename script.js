@@ -1,840 +1,930 @@
-(() => {
+// ==========================================
+// LUMINA MINI E-COMMERCE
+// ==========================================
 
-  /* ==========================================
-     PRODUCT DATA
-  ========================================== */
 
-  const products = [
+// PRODUCT DATA
+const products = [
 
+  {
+    id: "p1",
+    name: "AeroPress",
+    category: "Lifestyle",
+    price: 39.99,
+    rating: 4.9,
+    tag: "BESTSELLER",
+    description: "Smooth coffee, anywhere.",
+    image:
+      "https://images.unsplash.com/photo-1610889556528-9a770e32642f?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p2",
+    name: "Cloud Lamp",
+    category: "Home",
+    price: 64,
+    rating: 4.8,
+    tag: "NEW",
+    description: "Soft light for slow evenings.",
+    image:
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p3",
+    name: "Studio Headphones",
+    category: "Tech",
+    price: 129,
+    rating: 4.9,
+    tag: "FAVORITE",
+    description: "Immersive sound, clean design.",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p4",
+    name: "Ceramic Set",
+    category: "Home",
+    price: 52.5,
+    rating: 4.7,
+    tag: "HANDMADE",
+    description: "Made for everyday rituals.",
+    image:
+      "https://images.unsplash.com/photo-1572119865084-43c285814d63?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p5",
+    name: "Everyday Tote",
+    category: "Lifestyle",
+    price: 42,
+    rating: 4.8,
+    tag: "ESSENTIAL",
+    description: "Carry more. Keep it simple.",
+    image:
+      "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p6",
+    name: "Desk Speaker",
+    category: "Tech",
+    price: 89,
+    rating: 4.6,
+    tag: "STUDIO",
+    description: "Small speaker, rich atmosphere.",
+    image:
+      "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p7",
+    name: "Linen Throw",
+    category: "Home",
+    price: 58,
+    rating: 4.9,
+    tag: "SOFT",
+    description: "Natural texture for quiet spaces.",
+    image:
+      "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=700&q=85"
+  },
+
+  {
+    id: "p8",
+    name: "Pocket Camera",
+    category: "Tech",
+    price: 179,
+    rating: 4.8,
+    tag: "LIMITED",
+    description: "Keep everyday moments close.",
+    image:
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85"
+  }
+
+];
+
+
+// CART
+let cart =
+  JSON.parse(
+    localStorage.getItem("lumina-cart")
+  ) || [];
+
+let activeCategory = "All";
+
+
+// DOM
+const $ = selector =>
+  document.querySelector(selector);
+
+
+const productGrid =
+  $("#productGrid");
+
+const cartButton =
+  $("#cartButton");
+
+const cartDrawer =
+  $("#cartDrawer");
+
+const closeCart =
+  $("#closeCart");
+
+const overlay =
+  $("#overlay");
+
+const cartItems =
+  $("#cartItems");
+
+const emptyCart =
+  $("#emptyCart");
+
+const cartSummary =
+  $("#cartSummary");
+
+const cartCount =
+  $("#cartCount");
+
+const subtotalEl =
+  $("#subtotal");
+
+const shippingEl =
+  $("#shipping");
+
+const totalEl =
+  $("#total");
+
+const checkoutButton =
+  $("#checkoutButton");
+
+const checkoutModal =
+  $("#checkoutModal");
+
+const closeModal =
+  $("#closeModal");
+
+const checkoutList =
+  $("#checkoutList");
+
+const checkoutTotal =
+  $("#checkoutTotal");
+
+const placeOrder =
+  $("#placeOrder");
+
+const continueShopping =
+  $("#continueShopping");
+
+const toast =
+  $("#toast");
+
+
+// MONEY FORMAT
+function money(value) {
+
+  return new Intl.NumberFormat(
+    "en-US",
     {
-      id: "p1",
-      name: "AeroPress",
-      image:
-        "https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&h=600&fit=crop",
-      price: 39.99,
-      description: "Smooth coffee anywhere"
-    },
-
-    {
-      id: "p2",
-      name: "Notebook",
-      image:
-        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=600&h=600&fit=crop",
-      price: 12.5,
-      description: "Dotted, hardcover"
-    },
-
-    {
-      id: "p3",
-      name: "Wireless Buds",
-      image:
-        "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&h=600&fit=crop",
-      price: 89.9,
-      description: "Noise cancelling"
-    },
-
-    {
-      id: "p4",
-      name: "Scented Candle",
-      image:
-        "https://images.unsplash.com/photo-1602874801006-e26a4d0d59b0?w=600&h=600&fit=crop",
-      price: 18.75,
-      description: "Vanilla & oak"
-    },
-
-    {
-      id: "p5",
-      name: "Water Bottle",
-      image:
-        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&h=600&fit=crop",
-      price: 24,
-      description: "Insulated 750ml"
-    },
-
-    {
-      id: "p6",
-      name: "Backpack",
-      image:
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop",
-      price: 64.99,
-      description: "Urban daypack"
+      style: "currency",
+      currency: "USD"
     }
+  ).format(value);
 
-  ];
-
-
-  /* ==========================================
-     CART STATE
-  ========================================== */
-
-  let cart =
-    JSON.parse(
-      localStorage.getItem("luxeCart") || "[]"
-    );
+}
 
 
-  /* ==========================================
-     DOM REFERENCES
-  ========================================== */
+// SAVE CART
+function saveCart() {
 
-  const productGrid =
-    document.getElementById("productGrid");
+  localStorage.setItem(
+    "lumina-cart",
+    JSON.stringify(cart)
+  );
 
-  const cartCountDisplay =
-    document.getElementById(
-      "cartCountDisplay"
-    );
-
-  const cartTotalDisplay =
-    document.getElementById(
-      "cartTotalDisplay"
-    );
-
-  const openCheckoutBtn =
-    document.getElementById(
-      "openCheckoutBtn"
-    );
-
-  const modalOverlay =
-    document.getElementById(
-      "modalOverlay"
-    );
-
-  const closeModalBtn =
-    document.getElementById(
-      "closeModalBtn"
-    );
-
-  const cartItemsList =
-    document.getElementById(
-      "cartItemsList"
-    );
-
-  const modalTotalAmount =
-    document.getElementById(
-      "modalTotalAmount"
-    );
-
-  const continueShoppingBtn =
-    document.getElementById(
-      "continueShoppingBtn"
-    );
-
-  const placeOrderBtn =
-    document.getElementById(
-      "placeOrderBtn"
-    );
-
-  const toast =
-    document.getElementById("toast");
+}
 
 
-  /* ==========================================
-     GET PRODUCT
-  ========================================== */
+// RENDER PRODUCTS
+function renderProducts() {
 
-  function getProductById(id) {
-
-    return products.find(
-      product => product.id === id
-    );
-
-  }
-
-
-  /* ==========================================
-     SAVE CART
-  ========================================== */
-
-  function saveCart() {
-
-    localStorage.setItem(
-      "luxeCart",
-      JSON.stringify(cart)
-    );
-
-  }
+  const visibleProducts =
+    activeCategory === "All"
+      ? products
+      : products.filter(
+          product =>
+            product.category === activeCategory
+        );
 
 
-  /* ==========================================
-     TOTAL ITEM COUNT
-  ========================================== */
+  productGrid.innerHTML =
+    visibleProducts
+      .map(product => `
 
-  function getTotalItemCount() {
+        <article class="product-card">
 
-    return cart.reduce(
+          <div class="product-image">
+
+            <span class="product-tag">
+              ${product.tag}
+            </span>
+
+            <img
+              src="${product.image}"
+              alt="${product.name}"
+              loading="lazy"
+            >
+
+            <button
+              class="add-button"
+              data-add="${product.id}"
+              aria-label="Add ${product.name}">
+
+              +
+
+            </button>
+
+          </div>
+
+
+          <div class="product-info">
+
+            <h3>
+              ${product.name}
+            </h3>
+
+            <p>
+              ${product.description}
+            </p>
+
+            <div class="product-meta">
+
+              <strong>
+                ${money(product.price)}
+              </strong>
+
+              <span class="rating">
+                ★ ${product.rating}
+              </span>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `)
+      .join("");
+
+}
+
+
+// GET CART PRODUCTS
+function getCartItems() {
+
+  return cart
+
+    .map(item => {
+
+      const product =
+        products.find(
+          p => p.id === item.id
+        );
+
+      return product
+        ? {
+            ...product,
+            quantity: item.quantity
+          }
+        : null;
+
+    })
+
+    .filter(Boolean);
+
+}
+
+
+// RENDER CART
+function renderCart() {
+
+  const items =
+    getCartItems();
+
+
+  const count =
+    items.reduce(
       (sum, item) =>
         sum + item.quantity,
       0
     );
 
-  }
 
-
-  /* ==========================================
-     TOTAL PRICE
-  ========================================== */
-
-  function getTotalPrice() {
-
-    return cart.reduce(
-      (sum, item) => {
-
-        const product =
-          getProductById(
-            item.productId
-          );
-
-        return (
-          sum +
-          (
-            product
-              ? product.price *
-                item.quantity
-              : 0
-          )
-        );
-
-      },
+  const subtotal =
+    items.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
       0
     );
 
-  }
+
+  const shipping =
+    subtotal === 0
+      ? 0
+      : subtotal >= 100
+        ? 0
+        : 6.99;
 
 
-  /* ==========================================
-     RENDER PRODUCTS
-  ========================================== */
+  const total =
+    subtotal + shipping;
 
-  function renderProducts() {
 
-    productGrid.innerHTML =
-      products
-        .map(product => `
+  cartCount.textContent =
+    count;
 
-          <article
-            class="product-card"
-            data-product-id="${product.id}"
+
+  cartItems.innerHTML =
+    items
+      .map(item => `
+
+        <div class="cart-row">
+
+          <img
+            src="${item.image}"
+            alt="${item.name}"
           >
 
-            <div class="product-image-wrapper">
+          <div>
 
-              <img
-                class="product-image"
-                src="${product.image}"
-                alt="${product.name}"
-                loading="lazy"
-                onerror="this.src='https://placehold.co/600x600/1a1f3a/b794f6?text=${encodeURIComponent(product.name)}'"
-              />
+            <h4>
+              ${item.name}
+            </h4>
 
+            <div class="row-price">
+              ${money(item.price)} each
             </div>
 
+            <div class="qty">
 
-            <div class="product-name">
-              ${product.name}
+              <button
+                data-action="decrease"
+                data-id="${item.id}">
+                −
+              </button>
+
+              <span>
+                ${item.quantity}
+              </span>
+
+              <button
+                data-action="increase"
+                data-id="${item.id}">
+                +
+              </button>
+
             </div>
-
-
-            <div class="product-desc">
-              ${product.description}
-            </div>
-
-
-            <div class="product-price">
-              ${product.price.toFixed(2)}
-            </div>
-
 
             <button
-              class="btn-add"
-              data-add-id="${product.id}"
-            >
+              class="remove"
+              data-action="remove"
+              data-id="${item.id}">
 
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-
-                <circle
-                  cx="9"
-                  cy="21"
-                  r="1"
-                ></circle>
-
-                <circle
-                  cx="20"
-                  cy="21"
-                  r="1"
-                ></circle>
-
-                <path
-                  d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-                ></path>
-
-              </svg>
-
-              Add to cart
+              Remove
 
             </button>
 
-          </article>
+          </div>
 
-        `)
-        .join("");
+          <strong>
+            ${money(
+              item.price *
+              item.quantity
+            )}
+          </strong>
 
-  }
+        </div>
 
-
-  /* ==========================================
-     UPDATE CART SUMMARY
-  ========================================== */
-
-  function updateCartSummary() {
-
-    const totalCount =
-      getTotalItemCount();
-
-    const totalPrice =
-      getTotalPrice();
+      `)
+      .join("");
 
 
-    cartCountDisplay.textContent =
-      totalCount;
+  subtotalEl.textContent =
+    money(subtotal);
 
 
-    cartTotalDisplay.textContent =
-      `$${totalPrice.toFixed(2)}`;
+  shippingEl.textContent =
+    shipping === 0
+      ? "Free"
+      : money(shipping);
 
 
-    openCheckoutBtn.disabled =
-      totalCount === 0;
-
-  }
+  totalEl.textContent =
+    money(total);
 
 
-  /* ==========================================
-     ADD TO CART
-  ========================================== */
-
-  function addToCart(productId) {
-
-    const product =
-      getProductById(productId);
-
-    if (!product) return;
+  const hasItems =
+    items.length > 0;
 
 
-    const existingItem =
-      cart.find(
-        item =>
-          item.productId ===
-          productId
-      );
+  emptyCart.classList.toggle(
+    "show",
+    !hasItems
+  );
 
 
-    if (existingItem) {
+  cartSummary.classList.toggle(
+    "hidden",
+    !hasItems
+  );
 
-      existingItem.quantity += 1;
-
-    } else {
-
-      cart.push({
-        productId: productId,
-        quantity: 1
-      });
-
-    }
+}
 
 
-    saveCart();
+// ADD TO CART
+function addToCart(id) {
 
-    updateCartSummary();
-
-    showToast(
-      `${product.name} added to cart`
+  const existing =
+    cart.find(
+      item => item.id === id
     );
 
-  }
 
+  if (existing) {
 
-  /* ==========================================
-     CHANGE QUANTITY
-  ========================================== */
+    existing.quantity++;
 
-  function changeQuantity(
-    productId,
-    amount
-  ) {
+  } else {
 
-    const item =
-      cart.find(
-        item =>
-          item.productId ===
-          productId
-      );
-
-
-    if (!item) return;
-
-
-    item.quantity += amount;
-
-
-    if (item.quantity <= 0) {
-
-      cart =
-        cart.filter(
-          cartItem =>
-            cartItem.productId !==
-            productId
-        );
-
-    }
-
-
-    saveCart();
-
-    updateCartSummary();
-
-    renderCartModal();
+    cart.push({
+      id,
+      quantity: 1
+    });
 
   }
 
 
-  /* ==========================================
-     REMOVE FROM CART
-  ========================================== */
+  saveCart();
 
-  function removeFromCart(productId) {
+  renderCart();
 
-    const product =
-      getProductById(productId);
 
+  const product =
+    products.find(
+      p => p.id === id
+    );
+
+
+  showToast(
+    `${product.name} added to your bag`
+  );
+
+}
+
+
+// CHANGE QUANTITY
+function changeQuantity(
+  id,
+  change
+) {
+
+  const item =
+    cart.find(
+      item => item.id === id
+    );
+
+
+  if (!item) return;
+
+
+  item.quantity += change;
+
+
+  if (item.quantity <= 0) {
 
     cart =
       cart.filter(
-        item =>
-          item.productId !==
-          productId
+        cartItem =>
+          cartItem.id !== id
       );
 
+  }
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+// REMOVE PRODUCT
+function removeItem(id) {
+
+  cart =
+    cart.filter(
+      item =>
+        item.id !== id
+    );
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+// OPEN CART
+function openCart() {
+
+  cartDrawer.classList.add(
+    "open"
+  );
+
+  overlay.classList.add(
+    "show"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+// CLOSE CART
+function closeCartDrawer() {
+
+  cartDrawer.classList.remove(
+    "open"
+  );
+
+  overlay.classList.remove(
+    "show"
+  );
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+// CHECKOUT
+function openCheckout() {
+
+  const items =
+    getCartItems();
+
+
+  if (!items.length) return;
+
+
+  const subtotal =
+    items.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+
+  const shipping =
+    subtotal >= 100
+      ? 0
+      : 6.99;
+
+
+  const total =
+    subtotal + shipping;
+
+
+  checkoutList.innerHTML =
+    items
+      .map(item => `
+
+        <div class="checkout-line">
+
+          <img
+            src="${item.image}"
+            alt="${item.name}"
+          >
+
+          <div>
+
+            <strong>
+              ${item.name}
+            </strong>
+
+            <span>
+              Qty ${item.quantity}
+              ·
+              ${money(item.price)} each
+            </span>
+
+          </div>
+
+          <b>
+            ${money(
+              item.price *
+              item.quantity
+            )}
+          </b>
+
+        </div>
+
+      `)
+      .join("");
+
+
+  checkoutTotal.textContent =
+    money(total);
+
+
+  checkoutModal.classList.add(
+    "show"
+  );
+
+
+  cartDrawer.classList.remove(
+    "open"
+  );
+
+
+  overlay.classList.remove(
+    "show"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+// CLOSE CHECKOUT
+function closeCheckout() {
+
+  checkoutModal.classList.remove(
+    "show"
+  );
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+// TOAST
+function showToast(message) {
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    showToast.timer
+  );
+
+
+  showToast.timer =
+    setTimeout(
+      () =>
+        toast.classList.remove(
+          "show"
+        ),
+      2200
+    );
+
+}
+
+
+// PRODUCT ADD EVENT
+productGrid.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-add]"
+      );
+
+
+    if (!button) return;
+
+
+    addToCart(
+      button.dataset.add
+    );
+
+  }
+);
+
+
+// CART EVENTS
+cartItems.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-action]"
+      );
+
+
+    if (!button) return;
+
+
+    const {
+      action,
+      id
+    } = button.dataset;
+
+
+    if (
+      action === "increase"
+    ) {
+
+      changeQuantity(
+        id,
+        1
+      );
+
+    }
+
+
+    if (
+      action === "decrease"
+    ) {
+
+      changeQuantity(
+        id,
+        -1
+      );
+
+    }
+
+
+    if (
+      action === "remove"
+    ) {
+
+      removeItem(id);
+
+    }
+
+  }
+);
+
+
+// CATEGORY FILTER
+$("#filters").addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        ".filter"
+      );
+
+
+    if (!button) return;
+
+
+    activeCategory =
+      button.dataset.category;
+
+
+    document
+      .querySelectorAll(
+        ".filter"
+      )
+      .forEach(item =>
+        item.classList.remove(
+          "active"
+        )
+      );
+
+
+    button.classList.add(
+      "active"
+    );
+
+
+    renderProducts();
+
+  }
+);
+
+
+// CART BUTTON
+cartButton.addEventListener(
+  "click",
+  openCart
+);
+
+
+// CLOSE CART
+closeCart.addEventListener(
+  "click",
+  closeCartDrawer
+);
+
+
+// OVERLAY
+overlay.addEventListener(
+  "click",
+  closeCartDrawer
+);
+
+
+// CONTINUE SHOPPING
+continueShopping.addEventListener(
+  "click",
+  closeCartDrawer
+);
+
+
+// CHECKOUT
+checkoutButton.addEventListener(
+  "click",
+  openCheckout
+);
+
+
+// CLOSE MODAL
+closeModal.addEventListener(
+  "click",
+  closeCheckout
+);
+
+
+// MODAL BACKGROUND
+checkoutModal.addEventListener(
+  "click",
+  event => {
+
+    if (
+      event.target ===
+      checkoutModal
+    ) {
+
+      closeCheckout();
+
+    }
+
+  }
+);
+
+
+// PLACE DEMO ORDER
+placeOrder.addEventListener(
+  "click",
+  () => {
+
+    cart = [];
 
     saveCart();
 
-    updateCartSummary();
+    renderCart();
 
-    renderCartModal();
+    closeCheckout();
+
+    showToast(
+      "Demo order placed — thank you!"
+    );
+
+  }
+);
 
 
-    if (product) {
+// ESCAPE KEY
+document.addEventListener(
+  "keydown",
+  event => {
 
-      showToast(
-        `${product.name} removed`
-      );
+    if (
+      event.key ===
+      "Escape"
+    ) {
+
+      closeCartDrawer();
+
+      closeCheckout();
 
     }
 
   }
+);
 
 
-  /* ==========================================
-     RENDER CART MODAL
-  ========================================== */
+// INITIAL LOAD
+renderProducts();
 
-  function renderCartModal() {
-
-    const totalPrice =
-      getTotalPrice();
-
-
-    modalTotalAmount.textContent =
-      `$${totalPrice.toFixed(2)}`;
-
-
-    if (cart.length === 0) {
-
-      cartItemsList.innerHTML = `
-        <li class="empty-cart-message">
-          Your cart is empty
-        </li>
-      `;
-
-      placeOrderBtn.disabled =
-        true;
-
-      return;
-
-    }
-
-
-    placeOrderBtn.disabled =
-      false;
-
-
-    cartItemsList.innerHTML =
-      cart
-        .map(item => {
-
-          const product =
-            getProductById(
-              item.productId
-            );
-
-
-          if (!product) return "";
-
-
-          const subtotal =
-            product.price *
-            item.quantity;
-
-
-          return `
-
-            <li class="cart-item">
-
-              <div class="cart-item-info">
-
-                <img
-                  class="cart-item-image"
-                  src="${product.image}"
-                  alt="${product.name}"
-                  onerror="this.src='https://placehold.co/100x100/1a1f3a/b794f6?text=Item'"
-                />
-
-
-                <div class="cart-item-details">
-
-                  <span class="cart-item-name">
-                    ${product.name}
-                  </span>
-
-                  <span class="cart-item-price">
-                    $${product.price.toFixed(2)} each
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <div class="cart-item-controls">
-
-                <button
-                  class="qty-btn"
-                  data-minus-id="${product.id}"
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-
-
-                <span class="cart-item-qty">
-                  ${item.quantity}
-                </span>
-
-
-                <button
-                  class="qty-btn"
-                  data-plus-id="${product.id}"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-
-
-                <button
-                  class="remove-btn"
-                  data-remove-id="${product.id}"
-                >
-                  Remove
-                </button>
-
-              </div>
-
-
-              <div class="cart-item-subtotal">
-
-                $${subtotal.toFixed(2)}
-
-              </div>
-
-            </li>
-
-          `;
-
-        })
-        .join("");
-
-  }
-
-
-  /* ==========================================
-     OPEN MODAL
-  ========================================== */
-
-  function openModal() {
-
-    renderCartModal();
-
-    modalOverlay.classList.add(
-      "active"
-    );
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-  }
-
-
-  /* ==========================================
-     CLOSE MODAL
-  ========================================== */
-
-  function closeModal() {
-
-    modalOverlay.classList.remove(
-      "active"
-    );
-
-    document.body.classList.remove(
-      "modal-open"
-    );
-
-  }
-
-
-  /* ==========================================
-     TOAST
-  ========================================== */
-
-  let toastTimer;
-
-
-  function showToast(message) {
-
-    toast.textContent =
-      message;
-
-
-    toast.classList.add(
-      "show"
-    );
-
-
-    clearTimeout(
-      toastTimer
-    );
-
-
-    toastTimer =
-      setTimeout(() => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      }, 1800);
-
-  }
-
-
-  /* ==========================================
-     PRODUCT BUTTON EVENT
-  ========================================== */
-
-  productGrid.addEventListener(
-    "click",
-    event => {
-
-      const button =
-        event.target.closest(
-          "[data-add-id]"
-        );
-
-
-      if (!button) return;
-
-
-      addToCart(
-        button.dataset.addId
-      );
-
-    }
-  );
-
-
-  /* ==========================================
-     CART BUTTON EVENTS
-  ========================================== */
-
-  cartItemsList.addEventListener(
-    "click",
-    event => {
-
-      const minus =
-        event.target.closest(
-          "[data-minus-id]"
-        );
-
-
-      const plus =
-        event.target.closest(
-          "[data-plus-id]"
-        );
-
-
-      const remove =
-        event.target.closest(
-          "[data-remove-id]"
-        );
-
-
-      if (minus) {
-
-        changeQuantity(
-          minus.dataset.minusId,
-          -1
-        );
-
-      }
-
-
-      if (plus) {
-
-        changeQuantity(
-          plus.dataset.plusId,
-          1
-        );
-
-      }
-
-
-      if (remove) {
-
-        removeFromCart(
-          remove.dataset.removeId
-        );
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================
-     CHECKOUT
-  ========================================== */
-
-  openCheckoutBtn.addEventListener(
-    "click",
-    openModal
-  );
-
-
-  closeModalBtn.addEventListener(
-    "click",
-    closeModal
-  );
-
-
-  continueShoppingBtn.addEventListener(
-    "click",
-    closeModal
-  );
-
-
-  /* ==========================================
-     CLICK OUTSIDE MODAL
-  ========================================== */
-
-  modalOverlay.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target ===
-        modalOverlay
-      ) {
-
-        closeModal();
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================
-     ESC KEY
-  ========================================== */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Escape" &&
-        modalOverlay.classList.contains(
-          "active"
-        )
-      ) {
-
-        closeModal();
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================
-     PLACE ORDER
-  ========================================== */
-
-  placeOrderBtn.addEventListener(
-    "click",
-    () => {
-
-      if (cart.length === 0)
-        return;
-
-
-      const orderTotal =
-        getTotalPrice();
-
-
-      cart = [];
-
-
-      saveCart();
-
-      updateCartSummary();
-
-      renderCartModal();
-
-      closeModal();
-
-
-      showToast(
-        `Order placed · $${orderTotal.toFixed(2)}`
-      );
-
-    }
-  );
-
-
-  /* ==========================================
-     INITIALIZE APPLICATION
-  ========================================== */
-
-  renderProducts();
-
-  updateCartSummary();
-
-})();
+renderCart();
