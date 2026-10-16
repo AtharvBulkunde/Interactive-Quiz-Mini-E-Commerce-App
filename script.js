@@ -486,7 +486,10 @@ function addToCart(id) {
 
 
   if (existing) {
-
+    if (existing.quantity >= 20) {
+      showToast("Maximum quantity is 20 per product");
+      return;
+    }
     existing.quantity++;
 
   } else {
