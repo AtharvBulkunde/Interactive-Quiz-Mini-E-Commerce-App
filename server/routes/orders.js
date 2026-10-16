@@ -29,8 +29,9 @@ router.post("/", async (req, res, next) => {
     return res.status(400).json({ error: "Maximum quantity is 20 per product" });
   }
 
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     await client.query("BEGIN");
     const ids = [...merged.keys()];
     const productsResult = await client.query(
@@ -48,9 +49,15 @@ router.post("/", async (req, res, next) => {
       const product = productsById.get(productId);
       return { productId, quantity, unitPrice: product.price, name: product.name };
     });
-    const subtotal = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-    const shipping = subtotal === 0 || subtotal >= 100 ? 0 : 6.99;
-    const total = Number((subtotal + shipping).toFixed(2));
+    // Work in integer cents to avoid floating-point currency rounding errors.
+    const subtotalCents = items.reduce(
+      (sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity,
+      0
+    );
+    const shippingCents = subtotalCents === 0 || subtotalCents >= 10_000 ? 0 : 699;
+    const subtotal = subtotalCents / 100;
+    const shipping = shippingCents / 100;
+    const total = (subtotalCents + shippingCents) / 100;
 
     const orderResult = await client.query(
       `INSERT INTO orders (customer_name, customer_email, subtotal, shipping, total, status)
@@ -73,10 +80,16 @@ router.post("/", async (req, res, next) => {
       message: "Demo order saved as pending. No payment has been processed."
     });
   } catch (error) {
-    await client.query("ROLLBACK");
+    if (client) {
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // Preserve the original query error if rollback also fails.
+      }
+    }
     next(error);
   } finally {
-    client.release();
+    if (client) client.release();
   }
 });
 

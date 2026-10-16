@@ -18,7 +18,19 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:3000")
   .split(",").map((origin) => origin.trim()).filter(Boolean);
 
 app.disable("x-powered-by");
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+      imgSrc: ["'self'", "data:", "https://images.unsplash.com"],
+      connectSrc: ["'self'", "https:"]
+    }
+  }
+}));
 app.use(cors({
   origin(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
@@ -42,8 +54,11 @@ app.use("/api/products", productsRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/quizzes", quizzesRouter);
 
-// Serve the original static frontend from the same Node deployment.
-app.use(express.static(root, { index: "index.html" }));
+// Do not expose backend source code through the public static file server.
+app.use("/server", (_req, res) => res.status(404).end());
+
+// Serve the frontend from the same Node deployment.
+app.use(express.static(root, { index: "index.html", dotfiles: "deny" }));
 
 app.use((req, res) => {
   if (req.path.startsWith("/api/")) return res.status(404).json({ error: "API route not found" });
@@ -51,6 +66,9 @@ app.use((req, res) => {
 });
 
 app.use((error, _req, res, _next) => {
+  if (error.type === "entity.parse.failed") {
+    return res.status(400).json({ error: "Invalid JSON request body" });
+  }
   if (error.message === "Origin not allowed by CORS") {
     return res.status(403).json({ error: "Origin not allowed" });
   }

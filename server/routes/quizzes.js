@@ -3,6 +3,7 @@ import { z } from "zod";
 import { query } from "../db.js";
 
 const router = Router();
+const uuidParam = z.string().uuid();
 
 router.get("/", async (_req, res, next) => {
   try {
@@ -16,17 +17,19 @@ router.get("/", async (_req, res, next) => {
 });
 
 router.get("/:id", async (req, res, next) => {
+  const parsedId = uuidParam.safeParse(req.params.id);
+  if (!parsedId.success) return res.status(400).json({ error: "Invalid quiz ID" });
   try {
     const quizResult = await query(
       "SELECT id, title, description FROM quizzes WHERE id = $1 AND published = TRUE",
-      [req.params.id]
+      [parsedId.data]
     );
     if (!quizResult.rows[0]) return res.status(404).json({ error: "Quiz not found" });
 
     const questionsResult = await query(
       `SELECT id, prompt, options, points, sort_order
        FROM quiz_questions WHERE quiz_id = $1 ORDER BY sort_order`,
-      [req.params.id]
+      [parsedId.data]
     );
     res.json({ quiz: quizResult.rows[0], questions: questionsResult.rows });
   } catch (error) {
@@ -42,16 +45,18 @@ const attemptSchema = z.object({
 });
 
 router.post("/:id/attempts", async (req, res, next) => {
+  const parsedId = uuidParam.safeParse(req.params.id);
+  if (!parsedId.success) return res.status(400).json({ error: "Invalid quiz ID" });
   const parsed = attemptSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: "Invalid answers", details: parsed.error.issues });
 
   try {
-    const quiz = await query("SELECT id FROM quizzes WHERE id = $1 AND published = TRUE", [req.params.id]);
+    const quiz = await query("SELECT id FROM quizzes WHERE id = $1 AND published = TRUE", [parsedId.data]);
     if (!quiz.rows[0]) return res.status(404).json({ error: "Quiz not found" });
 
     const questions = await query(
       "SELECT id, answer_index, points FROM quiz_questions WHERE quiz_id = $1",
-      [req.params.id]
+      [parsedId.data]
     );
     const answerMap = new Map(parsed.data.answers.map((answer) => [answer.questionId, answer.answerIndex]));
     const validIds = new Set(questions.rows.map((question) => question.id));
@@ -69,7 +74,7 @@ router.post("/:id/attempts", async (req, res, next) => {
     const result = await query(
       `INSERT INTO quiz_attempts (quiz_id, score, max_score, answers)
        VALUES ($1, $2, $3, $4::jsonb) RETURNING id, score, max_score, created_at`,
-      [req.params.id, score, maxScore, JSON.stringify(parsed.data.answers)]
+      [parsedId.data, score, maxScore, JSON.stringify(parsed.data.answers)]
     );
     res.status(201).json({ attempt: result.rows[0], percentage: maxScore ? Math.round(score / maxScore * 100) : 0 });
   } catch (error) {

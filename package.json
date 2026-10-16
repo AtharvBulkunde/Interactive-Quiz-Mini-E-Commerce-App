@@ -4,11 +4,14 @@
   "private": true,
   "description": "Responsive mini e-commerce and interactive quiz with Express and PostgreSQL API",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server/app.js",
     "dev": "node --watch server/app.js",
-    "seed": "node server/seed.js"
+    "seed": "node server/seed.js",
+    "check": "node --check script.js && node --check server/app.js && node --check server/db.js && node --check server/routes/products.js && node --check server/routes/orders.js && node --check server/routes/quizzes.js && node --check server/seed.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
