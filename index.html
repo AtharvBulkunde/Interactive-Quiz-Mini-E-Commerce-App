@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="LUMINA — Aesthetic Mini E-Commerce App">
+  <meta name="description" content="LUMINA — curated goods, a mini store, and an interactive quiz">
   <title>LUMINA — Mini Store</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +33,7 @@
 
     <nav class="desktop-nav">
       <a href="#shop">Shop</a>
+      <a href="#quiz">Quick Quiz</a>
       <a href="#story">Our Story</a>
       <a href="#features">Why Us</a>
     </nav>
@@ -142,6 +143,35 @@
       aria-live="polite">
     </section>
 
+
+    <!-- INTERACTIVE QUIZ -->
+    <section class="quiz-section" id="quiz">
+      <div class="quiz-heading">
+        <span class="eyebrow">TAKE A QUICK BREAK</span>
+        <h2>A little curiosity goes a long way.</h2>
+        <p>Answer a few quick questions, submit your choices, and see how you did.</p>
+      </div>
+
+      <div class="quiz-shell">
+        <div class="quiz-topline">
+          <span id="quizTitle">LUMINA QUICK QUIZ</span>
+          <span id="quizStatus">Loading questions…</span>
+        </div>
+        <div class="quiz-progress" aria-hidden="true"><span id="quizProgressBar"></span></div>
+        <div id="quizQuestions" class="quiz-questions" aria-live="polite">
+          <p class="quiz-loading">Preparing your questions…</p>
+        </div>
+        <div class="quiz-actions">
+          <button class="secondary-button" id="quizRestart" type="button">Reset answers</button>
+          <button class="checkout-button" id="quizSubmit" type="button" disabled>Submit answers <span>→</span></button>
+        </div>
+        <div class="quiz-result" id="quizResult" hidden role="status">
+          <strong id="quizScore"></strong>
+          <p id="quizResultText"></p>
+        </div>
+        <p class="quiz-note">Your selected answers are used only to calculate this attempt.</p>
+      </div>
+    </section>
 
     <!-- STORY -->
     <section class="story-section" id="story">
@@ -367,9 +397,17 @@
       </h2>
 
       <p class="modal-intro">
-        Review your order before placing it.
+        Review your order details. This demo does not process payments.
       </p>
 
+      <div class="customer-fields">
+        <label for="customerName">Full name
+          <input id="customerName" name="customerName" type="text" autocomplete="name" minlength="2" maxlength="100" required placeholder="Your name">
+        </label>
+        <label for="customerEmail">Email address
+          <input id="customerEmail" name="customerEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+        </label>
+      </div>
 
       <div
         class="checkout-list"
@@ -394,14 +432,13 @@
         class="place-order"
         id="placeOrder">
 
-        Place demo order
+        Save demo order
         <span>↗</span>
 
       </button>
 
       <p class="demo-note">
-        This is a front-end demo.
-        No payment will be processed.
+        Orders are saved as pending only when the backend is configured. No payment is processed.
       </p>
 
     </div>
@@ -416,6 +453,7 @@
   </div>
 
 
+  <script>window.LUMINA_API_BASE_URL = window.LUMINA_API_BASE_URL || "";</script>
   <script src="script.js"></script>
 
 </body>
