@@ -74,7 +74,7 @@ router.post("/:id/attempts", async (req, res, next) => {
     const result = await query(
       `INSERT INTO quiz_attempts (quiz_id, score, max_score, answers)
        VALUES ($1, $2, $3, $4::jsonb) RETURNING id, score, max_score, created_at`,
-      [req.params.id, score, maxScore, JSON.stringify(parsed.data.answers)]
+      [parsedId.data, score, maxScore, JSON.stringify(parsed.data.answers)]
     );
     res.status(201).json({ attempt: result.rows[0], percentage: maxScore ? Math.round(score / maxScore * 100) : 0 });
   } catch (error) {
