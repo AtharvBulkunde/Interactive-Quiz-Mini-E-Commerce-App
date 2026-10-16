@@ -29,8 +29,9 @@ router.post("/", async (req, res, next) => {
     return res.status(400).json({ error: "Maximum quantity is 20 per product" });
   }
 
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     await client.query("BEGIN");
     const ids = [...merged.keys()];
     const productsResult = await client.query(
@@ -79,10 +80,16 @@ router.post("/", async (req, res, next) => {
       message: "Demo order saved as pending. No payment has been processed."
     });
   } catch (error) {
-    await client.query("ROLLBACK");
+    if (client) {
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // Preserve the original query error if rollback also fails.
+      }
+    }
     next(error);
   } finally {
-    client.release();
+    if (client) client.release();
   }
 });
 
