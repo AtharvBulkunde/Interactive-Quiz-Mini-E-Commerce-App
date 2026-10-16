@@ -23,7 +23,32 @@ try {
       product
     );
   }
-  console.log(`Seeded ${products.length} demo products.`);
+  const quizId = "11111111-1111-4111-8111-111111111111";
+  const quizQuestions = [
+    ["11111111-1111-4111-8111-111111111101", "Which detail should a checkout page show before an order is placed?", ["Only the product image", "The order total", "A hidden fee", "A random product"], 1, 1],
+    ["11111111-1111-4111-8111-111111111102", "Where should an e-commerce app verify the final product price?", ["Only in the browser", "In a URL fragment", "On the server using trusted data", "In a button label"], 2, 1],
+    ["11111111-1111-4111-8111-111111111103", "What is a good way to protect database credentials?", ["Put them in HTML", "Commit them to GitHub", "Use server environment variables", "Share them in the page title"], 2, 1],
+    ["11111111-1111-4111-8111-111111111104", "What should a demo checkout clearly communicate?", ["Payment succeeded", "It is a demo and no payment was processed", "The order is shipped", "No price is needed"], 1, 1]
+  ];
+
+  await pool.query(
+    `INSERT INTO quizzes (id, title, description, question_count, published)
+     VALUES ($1, $2, $3, $4, TRUE)
+     ON CONFLICT (id) DO UPDATE SET title=EXCLUDED.title, description=EXCLUDED.description,
+       question_count=EXCLUDED.question_count, published=TRUE`,
+    [quizId, "Everyday Tech & Shopping", "A short quiz about checkout and secure web apps.", quizQuestions.length]
+  );
+  await pool.query("DELETE FROM quiz_questions WHERE quiz_id = $1", [quizId]);
+  for (let index = 0; index < quizQuestions.length; index++) {
+    const [id, prompt, options, answerIndex, points] = quizQuestions[index];
+    await pool.query(
+      `INSERT INTO quiz_questions (id, quiz_id, prompt, options, answer_index, points, sort_order)
+       VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+      [id, quizId, prompt, JSON.stringify(options), answerIndex, points, index + 1]
+    );
+  }
+
+  console.log(`Seeded ${products.length} demo products and ${quizQuestions.length} quiz questions.`);
 } finally {
   await pool.end();
 }
